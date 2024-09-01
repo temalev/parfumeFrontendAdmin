@@ -1,0 +1,68 @@
+name: Deploy prod to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy changes to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/frontend_admin_prod
+            git pull
+            rm -rf dist
+            docker build . --output type=local,dest=./dist
+            cp -r ./dist /var/www/admin_prod
+
+      - name: Send success message
+        if: ${{ success() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ✅ @mytemalev успешный деплой админки на прод:
+
+            Репозиторий: ${{ github.repository }}
+
+            [Перейти на сайт](https://dev.parfburo.com/)
+      
+      - name: Send error message
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ❌ @mytemalev ошибка деплоя админки на прод:
+
+            Репозиторий: ${{ github.repository }}
+
+            Посмотреть: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Send cancelled message
+        if: ${{ cancelled() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ⛔️ @mytemalev деплой админки на прод отменен:
+
+            Репозиторий: ${{ github.repository }}
+
+            Посмотреть: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
