@@ -1,6 +1,8 @@
-FROM node:18.16.0
+# syntax=docker/dockerfile:1
 
-WORKDIR /web
+FROM node:18-alpine AS builder
+
+WORKDIR /app
 
 ARG PUBLIC_API_BASE_URL
 ARG NODE_ENV
@@ -9,10 +11,11 @@ ENV NODE_ENV=$NODE_ENV
 
 COPY package*.json ./
 
-RUN npm i --force
+RUN npm i
 
 COPY . .
 
 RUN npm run build
 
-CMD node .output/server/index.mjs
+FROM scratch as binary
+COPY --from=builder /app/dist/ /
