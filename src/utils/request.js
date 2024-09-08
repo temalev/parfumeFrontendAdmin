@@ -23,6 +23,7 @@ service.defaults.timeout = 0
 service.interceptors.response.use(
   (response) => {
     const res = response.data
+
     if (!response) {
       console.log(res)
 

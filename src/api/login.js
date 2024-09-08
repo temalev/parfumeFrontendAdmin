@@ -26,7 +26,7 @@ export function logIn(data) {
  */
 export function getCode(data) {
   return request({
-    url: '/api/v1/auth/code/sms',
+    url: '/api/v1/auth/code/call',
     method: 'post',
     data
   })

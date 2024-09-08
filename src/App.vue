@@ -26,7 +26,10 @@
             <el-button @click="step === 2 ? (step = 1) : (dialogFormVisible = false)"
               >Cancel</el-button
             >
-            <el-button type="primary" @click="getCode(), (step = 2)"> Confirm </el-button>
+            <el-button v-if="step === 1" type="primary" @click="getCode(), (step = 2)">
+              Confirm
+            </el-button>
+            <el-button v-else type="primary" @click="logIn()"> Confirm </el-button>
           </div>
         </template>
       </el-dialog>
@@ -46,7 +49,8 @@ export default {
         phone: '',
         code: ''
       },
-      step: 1
+      step: 1,
+      uuid: null
     }
   },
   mounted() {
@@ -66,19 +70,18 @@ export default {
       }
       try {
         const res = await getCode(data)
-        const uuid = res
-        this.logIn(uuid)
+        this.uuid = res.uuid
       } catch (e) {
         this.dialogFormVisible = true
       }
     },
-    async logIn(uuid) {
+    async logIn() {
       const data = {
-        uuid: uuid,
+        uuid: this.uuid,
         code: this.form.code
       }
       try {
-        const res = await logIn()
+        const res = await logIn(data)
       } catch (e) {
         this.dialogFormVisible = true
       }
