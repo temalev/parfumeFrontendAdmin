@@ -3,7 +3,7 @@
     <header></header>
     <div class="body">
       <left-menu />
-      <RouterView />
+      <RouterView :orders="orders" />
       <el-dialog v-model="dialogFormVisible" title="Вход" width="500">
         <el-form v-if="step === 1" :model="form">
           <el-form-item label="Номер телефона">
@@ -39,6 +39,7 @@
 <script>
 import LeftMenu from './components/LeftMenu.vue'
 import { getMe, logIn, getCode } from './api/login'
+import { getOrders } from './api/orders'
 
 export default {
   components: { LeftMenu },
@@ -50,11 +51,13 @@ export default {
         code: ''
       },
       step: 1,
-      uuid: null
+      uuid: null,
+      orders: []
     }
   },
   mounted() {
     this.getMe()
+    this.getOrders()
   },
   methods: {
     async getMe() {
@@ -62,6 +65,14 @@ export default {
         const res = await getMe()
       } catch (e) {
         this.dialogFormVisible = true
+      }
+    },
+    async getOrders() {
+      try {
+        const res = await getOrders()
+        this.orders = res
+      } catch (e) {
+        console.error(e)
       }
     },
     async getCode() {
@@ -72,7 +83,7 @@ export default {
         const res = await getCode(data)
         this.uuid = res.uuid
       } catch (e) {
-        this.dialogFormVisible = true
+        console.error(e)
       }
     },
     async logIn() {
@@ -82,8 +93,9 @@ export default {
       }
       try {
         const res = await logIn(data)
+        this.dialogFormVisible = false
       } catch (e) {
-        this.dialogFormVisible = true
+        console.error(e)
       }
     },
     formatPhone(value) {
@@ -137,6 +149,7 @@ header {
 .main {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .body {
   display: flex;

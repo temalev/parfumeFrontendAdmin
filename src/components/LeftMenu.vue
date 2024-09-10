@@ -1,7 +1,10 @@
 <template>
-  <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse">
-    <el-menu-item index="4">
-      <template #title>Navigator Four</template>
+  <el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse">
+    <el-menu-item index="1" @click="$router.push({ name: 'ordersList' })">
+      <template #title>Заказы</template>
+    </el-menu-item>
+    <el-menu-item index="2" @click="$router.push({ name: 'productsList' })">
+      <template #title>Товары</template>
     </el-menu-item>
   </el-menu>
 </template>
