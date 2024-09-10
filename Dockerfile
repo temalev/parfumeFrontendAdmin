@@ -11,6 +11,7 @@ ENV NODE_ENV=$NODE_ENV
 
 COPY package*.json ./
 
+RUN npm i @rollup/rollup-linux-x64-musl
 RUN npm i
 
 COPY . .
