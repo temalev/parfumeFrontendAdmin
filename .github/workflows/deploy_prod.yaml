@@ -24,7 +24,8 @@ jobs:
             git pull
             rm -rf dist
             docker build . --output type=local,dest=./dist
-            cp -r ./dist /var/www/admin_prod
+            rm -rf /var/www/admin_prod/*
+            cp -r ./dist/* /var/www/admin_prod
 
       - name: Send success message
         if: ${{ success() }}
@@ -37,7 +38,7 @@ jobs:
 
             Репозиторий: ${{ github.repository }}
 
-            [Перейти на сайт](https://dev.parfburo.com/)
+            https://admin.parfburo.com
       
       - name: Send error message
         if: ${{ failure() }}

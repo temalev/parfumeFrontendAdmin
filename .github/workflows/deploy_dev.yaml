@@ -28,7 +28,8 @@ jobs:
             git pull
             rm -rf dist
             docker build . --output type=local,dest=./dist
-            cp -r ./dist /var/www/admin_dev
+            rm -rf /var/www/admin_dev/*
+            cp -r ./dist/* /var/www/admin_dev
 
       - name: Set end time
         id: end-time
@@ -62,7 +63,7 @@ jobs:
             Время завершения сборки: ${{ env.END_TIME }}
             Длительность сборки: ${{ env.DURATION }}
 
-            https://dev.parfburo.com
+            https://admindev.parfburo.com
 
       - name: Send error message
         if: ${{ failure() }}
