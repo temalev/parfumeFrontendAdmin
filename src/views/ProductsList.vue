@@ -2,7 +2,6 @@
   <div class="products-view">
     <div class="products-view-header">
       <h1>Товары</h1>
-      <el-button @click="sync" type="primary">Синхронизировать</el-button>
     </div>
 
     <el-table :data="products" style="width: 100%">
@@ -37,14 +36,6 @@ export default {
       try {
         const res = await getProducts()
         this.products = res
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    async productsSync() {
-      try {
-        await getProducts()
-        this.getProducts()
       } catch (e) {
         console.error(e)
       }

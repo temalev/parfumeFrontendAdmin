@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminView from '../views/AdminView.vue'
 import OrdersList from '../views/OrdersList.vue'
 import ProductsList from '../views/ProductsList.vue'
+import Sync from '../views/Sync.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/products-list',
       name: 'productsList',
       component: ProductsList
+    },
+    {
+      path: '/sync',
+      name: 'sync',
+      component: Sync
     }
   ]
 })
