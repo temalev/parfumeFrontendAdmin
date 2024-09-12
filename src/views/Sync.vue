@@ -12,8 +12,18 @@
           >Отменить синхронизацию</el-button
         >
         <el-button
+          v-if="syncStatus?.statusId === 3"
+          @click="performSync"
+          type="primary"
+          :loading="syncLoading"
+          >Выполнить синхронизацию</el-button
+        >
+        <el-button
           v-if="
-            syncStatus?.statusId === 0 || syncStatus?.statusId === 1 || syncStatus?.statusId === 2
+            syncStatus?.statusId === 0 ||
+            syncStatus?.statusId === 1 ||
+            syncStatus?.statusId === 2 ||
+            syncStatus?.statusId === 4
           "
           @click="getSyncStatus"
           :loading="syncLoading"
@@ -65,7 +75,7 @@
 </template>
 
 <script>
-import { getSyncProducts, startSync, getSyncStatus, deleteSync } from '../api/products'
+import { getSyncProducts, startSync, getSyncStatus, deleteSync, performSync } from '../api/products'
 import { uploadFile } from '../api/fileStorage'
 
 export default {
@@ -112,14 +122,14 @@ export default {
   },
   methods: {
     async getSyncProducts() {
-      this.syncProductsLoading = true
+      this.syncLoading = true
       try {
         const res = await getSyncProducts()
         this.products = res
       } catch (e) {
         console.error(e)
       }
-      this.syncProductsLoading = false
+      this.syncLoading = false
     },
     async deleteSync() {
       this.syncLoading = true
@@ -127,11 +137,21 @@ export default {
         const res = await deleteSync()
         setTimeout(() => {
           this.getSyncStatus()
-        }, 3000)
+        }, 2000)
       } catch (e) {
         console.error(e)
       }
-      this.syncLoading = false
+    },
+    async performSync() {
+      this.syncLoading = true
+      try {
+        const res = await performSync()
+        setTimeout(() => {
+          this.getSyncStatus()
+        }, 2000)
+      } catch (e) {
+        console.error(e)
+      }
     },
     async getSyncStatus() {
       this.syncLoading = true
@@ -142,7 +162,6 @@ export default {
         console.error(e)
         this.syncStatus = null
       }
-      this.syncLoading = false
       this.getSyncProducts()
     },
     sync() {
@@ -154,11 +173,10 @@ export default {
         await startSync()
         setTimeout(() => {
           this.getSyncStatus()
-        }, 3000)
+        }, 2000)
       } catch (e) {
         console.error(e)
       }
-      this.syncLoading = false
     },
     handleRemove(uploadFile, uploadFiles) {
       console.log(uploadFile, uploadFiles)

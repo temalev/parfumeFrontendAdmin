@@ -21,6 +21,16 @@ export function startSync() {
 }
 
 /**
+ * Выполнить синхронизацию
+ */
+export function performSync() {
+  return request({
+    url: '/api/v1/products/sync',
+    method: 'post'
+  })
+}
+
+/**
  * Проверить синхронизацию
  */
 export function getSyncStatus() {
