@@ -7,7 +7,10 @@
         <el-button v-if="syncStatus?.statusId === 3" @click="deleteSync" type="danger"
           >Отменить синхронизацию</el-button
         >
-        <el-button v-if="!syncStatus?.statusId" @click="sync" type="primary"
+        <el-button
+          v-if="!syncStatus?.statusId || syncStatus?.statusId === 6"
+          @click="sync"
+          type="primary"
           >Получить новые товары</el-button
         >
       </div>
