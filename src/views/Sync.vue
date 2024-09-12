@@ -1,7 +1,7 @@
 <template>
   <div class="products-view">
     <div class="products-view-header">
-      <h1>Товары</h1>
+      <h1>Товары ({{ products?.length }})</h1>
       <div class="d-flex gap-3 align-center">
         {{ SYNC_STATUS[syncStatus?.statusId] }}
         <el-button v-if="syncStatus?.statusId === 3" @click="deleteSync" type="danger"
@@ -16,7 +16,7 @@
       </div>
     </div>
     <el-alert
-      v-if="syncStatus?.errorsCount"
+      v-if="syncStatus?.errorsCount && syncStatus?.statusId !== 6"
       title="Найдены ошибки"
       type="error"
       description="More text description"
@@ -130,7 +130,9 @@ export default {
     async startSync() {
       try {
         await startSync()
-        this.getSyncStatus()
+        setTimeout(() => {
+          this.getSyncStatus()
+        }, 3000)
       } catch (e) {
         console.error(e)
       }
