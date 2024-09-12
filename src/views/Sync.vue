@@ -4,12 +4,17 @@
       <h1>Товары ({{ products?.length }})</h1>
       <div class="d-flex gap-3 align-center">
         {{ SYNC_STATUS[syncStatus?.statusId] }}
-        <el-button v-if="syncStatus?.statusId === 3" @click="deleteSync" type="danger"
+        <el-button
+          v-if="syncStatus?.statusId === 3"
+          @click="deleteSync"
+          type="danger"
+          :loading="syncLoading"
           >Отменить синхронизацию</el-button
         >
         <el-button
           v-if="!syncStatus?.statusId || syncStatus?.statusId === 6"
           @click="sync"
+          :loading="syncLoading"
           type="primary"
           >Получить новые товары</el-button
         >
@@ -65,6 +70,7 @@ export default {
     return {
       products: [],
       syncProductsLoading: false,
+      syncLoading: false,
       syncStatus: null,
       SYNC_STATUS: {
         0: 'Создан',
@@ -107,27 +113,34 @@ export default {
       this.syncProductsLoading = false
     },
     async deleteSync() {
+      this.syncLoading = true
       try {
         const res = await deleteSync()
+        setTimeout(() => {
+          this.getSyncStatus()
+        }, 3000)
       } catch (e) {
         console.error(e)
       }
+      this.syncLoading = false
     },
     async getSyncStatus() {
       this.syncStatusLoading = true
       try {
         const res = await getSyncStatus()
         this.syncStatus = res
-        this.getSyncProducts()
       } catch (e) {
         console.error(e)
+        this.syncStatus = null
       }
       this.syncStatusLoading = false
+      this.getSyncProducts()
     },
     sync() {
       this.startSync()
     },
     async startSync() {
+      this.syncLoading = true
       try {
         await startSync()
         setTimeout(() => {
@@ -136,6 +149,7 @@ export default {
       } catch (e) {
         console.error(e)
       }
+      this.syncLoading = false
     },
     handleRemove(uploadFile, uploadFiles) {
       console.log(uploadFile, uploadFiles)
