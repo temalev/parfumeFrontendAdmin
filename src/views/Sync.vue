@@ -12,6 +12,15 @@
           >Отменить синхронизацию</el-button
         >
         <el-button
+          v-if="
+            syncStatus?.statusId === 0 || syncStatus?.statusId === 1 || syncStatus?.statusId === 2
+          "
+          @click="getSyncStatus"
+          :loading="syncLoading"
+          type="primary"
+          >Проверить синхронизацию</el-button
+        >
+        <el-button
           v-if="!syncStatus?.statusId || syncStatus?.statusId === 6"
           @click="sync"
           :loading="syncLoading"
@@ -125,7 +134,7 @@ export default {
       this.syncLoading = false
     },
     async getSyncStatus() {
-      this.syncStatusLoading = true
+      this.syncLoading = true
       try {
         const res = await getSyncStatus()
         this.syncStatus = res
@@ -133,7 +142,7 @@ export default {
         console.error(e)
         this.syncStatus = null
       }
-      this.syncStatusLoading = false
+      this.syncLoading = false
       this.getSyncProducts()
     },
     sync() {
