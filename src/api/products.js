@@ -29,6 +29,16 @@ export function getSyncStatus() {
     method: 'get'
   })
 }
+
+/**
+ * Проверить синхронизацию
+ */
+export function deleteSync() {
+  return request({
+    url: '/api/v1/products/sync',
+    method: 'delete'
+  })
+}
 /**
  * Получить товары для синхронизации
  */

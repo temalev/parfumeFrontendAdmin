@@ -4,7 +4,12 @@
       <h1>Товары</h1>
       <div class="d-flex gap-3 align-center">
         {{ SYNC_STATUS[syncStatus?.statusId] }}
-        <el-button @click="sync" type="primary">{{ buttonName }}</el-button>
+        <el-button v-if="syncStatus?.statusId === 3" @click="deleteSync" type="danger"
+          >Отменить синхронизацию</el-button
+        >
+        <el-button v-if="!syncStatus?.statusId" @click="sync" type="primary"
+          >Получить новые товары</el-button
+        >
       </div>
     </div>
     <el-alert
@@ -43,7 +48,7 @@
 </template>
 
 <script>
-import { getSyncProducts, startSync, getSyncStatus } from '../api/products'
+import { getSyncProducts, startSync, getSyncStatus, deleteSync } from '../api/products'
 import { uploadFile } from '../api/fileStorage'
 
 export default {
@@ -74,7 +79,6 @@ export default {
     }
   },
   mounted() {
-    this.getSyncProducts()
     this.getSyncStatus()
   },
   computed: {
@@ -99,11 +103,19 @@ export default {
       }
       this.syncProductsLoading = false
     },
+    async deleteSync() {
+      try {
+        const res = await deleteSync()
+      } catch (e) {
+        console.error(e)
+      }
+    },
     async getSyncStatus() {
       this.syncStatusLoading = true
       try {
         const res = await getSyncStatus()
         this.syncStatus = res
+        this.getSyncProducts()
       } catch (e) {
         console.error(e)
       }
@@ -115,6 +127,7 @@ export default {
     async startSync() {
       try {
         await startSync()
+        this.getSyncStatus()
       } catch (e) {
         console.error(e)
       }
