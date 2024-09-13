@@ -6,6 +6,9 @@
     <el-menu-item index="2" @click="$router.push({ name: 'productsList' })">
       <template #title>Товары</template>
     </el-menu-item>
+    <el-menu-item index="3" @click="$router.push({ name: 'sync' })">
+      <template #title>Синхронизация</template>
+    </el-menu-item>
   </el-menu>
 </template>
 
