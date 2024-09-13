@@ -55,17 +55,19 @@
       <el-table-column prop="description" label="Описание" />
       <el-table-column prop="price" label="Стоимость" />
       <el-table-column prop="price" label="Фото">
-        <el-upload
-          :file-list="fileList"
-          :limit="1"
-          :multiple="false"
-          :http-request="uploadFileRequest"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-        >
-          +
-        </el-upload>
+        <template #default="props">
+          <el-upload
+            :file-list="fileList"
+            :limit="1"
+            :multiple="false"
+            :http-request="(val) => uploadFileRequest(val, props.row.id)"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+          >
+            +
+          </el-upload>
+        </template>
       </el-table-column>
     </el-table>
     <el-dialog v-model="dialogVisible">
@@ -75,7 +77,14 @@
 </template>
 
 <script>
-import { getSyncProducts, startSync, getSyncStatus, deleteSync, performSync } from '../api/products'
+import {
+  getSyncProducts,
+  startSync,
+  getSyncStatus,
+  deleteSync,
+  performSync,
+  editProduct
+} from '../api/products'
 import { uploadFile } from '../api/fileStorage'
 
 export default {
@@ -185,16 +194,28 @@ export default {
       this.dialogImageUrl = uploadFile.url
       this.dialogVisible = true
     },
-    async uploadFileRequest({ file, onSuccess, onError }) {
+    async uploadFileRequest({ file, onSuccess, onError }, id) {
       const formData = new FormData()
       formData.append('file', file)
+      console.log(id)
 
       try {
         const res = await uploadFile(file) // Ваш вызов функции загрузки
-        onSuccess(res.data) // Сообщаем об успешной загрузке
+        onSuccess(res) // Сообщаем об успешной загрузке
+        this.editProduct(res.full, id)
       } catch (e) {
         console.error(e)
         onError(e) // Сообщаем о неудачной загрузке
+      }
+    },
+    async editProduct(file, id) {
+      const data = {
+        images: [file]
+      }
+      try {
+        const res = await editProduct(data, id)
+      } catch (e) {
+        console.error(e)
       }
     }
   }

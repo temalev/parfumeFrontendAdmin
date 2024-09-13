@@ -58,3 +58,14 @@ export function getSyncProducts() {
     method: 'get'
   })
 }
+
+/**
+ * Обновить данные товара
+ */
+export function editProduct(data, id) {
+  return request({
+    url: `/api/v1/sync-products/${id}`,
+    method: 'patch',
+    data
+  })
+}
