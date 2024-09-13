@@ -1,12 +1,15 @@
 <template>
   <el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse">
-    <el-menu-item index="1" @click="$router.push({ name: 'ordersList' })">
+    <el-menu-item index="1" @click="$router.push({ name: 'home' })">
+      <template #title>Главная</template>
+    </el-menu-item>
+    <el-menu-item index="2" @click="$router.push({ name: 'ordersList' })">
       <template #title>Заказы</template>
     </el-menu-item>
-    <el-menu-item index="2" @click="$router.push({ name: 'productsList' })">
+    <el-menu-item index="3" @click="$router.push({ name: 'productsList' })">
       <template #title>Товары</template>
     </el-menu-item>
-    <el-menu-item index="3" @click="$router.push({ name: 'sync' })">
+    <el-menu-item index="4" @click="$router.push({ name: 'sync' })">
       <template #title>Синхронизация</template>
     </el-menu-item>
   </el-menu>
