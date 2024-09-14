@@ -15,7 +15,7 @@
 
 <script>
 import OrderCard from '../components/OrderCard.vue'
-import { getOrders } from '../api/orders'
+import { getAllOrders } from '../api/orders'
 export default {
   components: { OrderCard },
   data() {
@@ -31,7 +31,7 @@ export default {
     async getOrders() {
       this.ordersLoading = true
       try {
-        const res = await getOrders()
+        const res = await getAllOrders()
         this.orders = res
       } catch (e) {
         console.error(e)
