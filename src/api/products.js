@@ -62,10 +62,21 @@ export function getSyncProducts() {
 /**
  * Обновить данные товара
  */
-export function editProduct(data, id) {
+export function editSyncProduct(data, id) {
   return request({
     url: `/api/v1/sync-products/${id}`,
     method: 'patch',
+    data
+  })
+}
+
+/**
+ * Обновить данные загруженного товара
+ */
+export function editProduct(data, id) {
+  return request({
+    url: `/api/v1/products/${id}`,
+    method: 'put',
     data
   })
 }

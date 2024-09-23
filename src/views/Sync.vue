@@ -57,7 +57,7 @@
       <el-table-column prop="price" label="Фото">
         <template #default="props">
           <el-upload
-            :file-list="fileList"
+            :file-list="fileList(props.row.images)"
             :limit="1"
             :multiple="false"
             :http-request="(val) => uploadFileRequest(val, props.row.id)"
@@ -83,7 +83,7 @@ import {
   getSyncStatus,
   deleteSync,
   performSync,
-  editProduct
+  editSyncProduct
 } from '../api/products'
 import { uploadFile } from '../api/fileStorage'
 
@@ -111,8 +111,7 @@ export default {
         7: 'Ошибка'
       },
       dialogImageUrl: '',
-      dialogVisible: false,
-      fileList: []
+      dialogVisible: false
     }
   },
   mounted() {
@@ -130,6 +129,13 @@ export default {
     }
   },
   methods: {
+    fileList(images) {
+      return images.map((el) => {
+        return {
+          url: el
+        }
+      })
+    },
     async getSyncProducts() {
       this.syncLoading = true
       try {
@@ -213,7 +219,7 @@ export default {
         images: [file]
       }
       try {
-        const res = await editProduct(data, id)
+        const res = await editSyncProduct(data, id)
       } catch (e) {
         console.error(e)
       }
