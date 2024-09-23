@@ -39,7 +39,6 @@
 <script>
 import LeftMenu from './components/LeftMenu.vue'
 import { getMe, logIn, getCode } from './api/login'
-import { getOrders } from './api/orders'
 
 export default {
   components: { LeftMenu },
@@ -57,7 +56,6 @@ export default {
   },
   mounted() {
     this.getMe()
-    this.getOrders()
   },
   methods: {
     async getMe() {
@@ -65,14 +63,6 @@ export default {
         const res = await getMe()
       } catch (e) {
         this.dialogFormVisible = true
-      }
-    },
-    async getOrders() {
-      try {
-        const res = await getOrders()
-        this.orders = res
-      } catch (e) {
-        console.error(e)
       }
     },
     async getCode() {
