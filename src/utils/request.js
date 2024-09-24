@@ -2,7 +2,6 @@ import axios from 'axios'
 import app from '@/main'
 
 // import { stringify } from 'query-string';
-console.log(import.meta.env.MODE)
 
 // create an axios instance
 const service = axios.create({
