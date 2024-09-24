@@ -64,7 +64,7 @@ export function getSyncProducts() {
  */
 export function editSyncProduct(data, id) {
   return request({
-    url: `/api/v1/sync-products/${id}`,
+    url: `/sync-products/${id}`,
     method: 'patch',
     data
   })
@@ -75,7 +75,7 @@ export function editSyncProduct(data, id) {
  */
 export function editProduct(data, id) {
   return request({
-    url: `/api/v1/products/${id}`,
+    url: `/products/${id}`,
     method: 'put',
     data
   })
