@@ -2,10 +2,12 @@ import axios from 'axios'
 import app from '@/main'
 
 // import { stringify } from 'query-string';
+console.log(import.meta.env.MODE)
 
 // create an axios instance
 const service = axios.create({
-  baseURL: import.meta.env.NODE_ENV === 'development' ? `${import.meta.env.VITE_BASE_API}/` : '/',
+  baseURL: import.meta.env.MODE === 'development' ? `${import.meta.env.VITE_BASE_API}/` : '/',
+
   // baseURL:`${process.env.VUE_APP_BASE_API}/`, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
