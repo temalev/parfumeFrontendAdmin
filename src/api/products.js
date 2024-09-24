@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getProducts() {
   return request({
-    url: '/api/v1/products',
+    url: '/products',
     method: 'get'
   })
 }
@@ -15,7 +15,7 @@ export function getProducts() {
  */
 export function startSync() {
   return request({
-    url: '/api/v1/products/sync/start',
+    url: '/products/sync/start',
     method: 'post'
   })
 }
@@ -25,7 +25,7 @@ export function startSync() {
  */
 export function performSync() {
   return request({
-    url: '/api/v1/products/sync',
+    url: '/products/sync',
     method: 'post'
   })
 }
@@ -35,7 +35,7 @@ export function performSync() {
  */
 export function getSyncStatus() {
   return request({
-    url: '/api/v1/products/sync',
+    url: '/products/sync',
     method: 'get'
   })
 }
@@ -45,7 +45,7 @@ export function getSyncStatus() {
  */
 export function deleteSync() {
   return request({
-    url: '/api/v1/products/sync',
+    url: '/products/sync',
     method: 'delete'
   })
 }
@@ -54,7 +54,7 @@ export function deleteSync() {
  */
 export function getSyncProducts() {
   return request({
-    url: '/api/v1/sync-products',
+    url: '/sync-products',
     method: 'get'
   })
 }

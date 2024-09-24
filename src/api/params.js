@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getPriceCourse() {
   return request({
-    url: '/api/v1/param/price_course',
+    url: '/param/price_course',
     method: 'get'
   })
 }
@@ -15,7 +15,7 @@ export function getPriceCourse() {
  */
 export function updatePriceCourse(data) {
   return request({
-    url: '/api/v1/param/price_course',
+    url: '/param/price_course',
     method: 'patch',
     data
   })
