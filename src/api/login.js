@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getMe() {
   return request({
-    url: '/api/v1/users/me',
+    url: '/users/me',
     method: 'get'
   })
 }
@@ -15,7 +15,7 @@ export function getMe() {
  */
 export function logIn(data) {
   return request({
-    url: '/api/v1/auth/login',
+    url: '/auth/login',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function logIn(data) {
  */
 export function getCode(data) {
   return request({
-    url: '/api/v1/auth/code/call',
+    url: '/auth/code/call',
     method: 'post',
     data
   })

@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getOrders() {
   return request({
-    url: '/api/v1/orders',
+    url: '/orders',
     method: 'get'
   })
 }
@@ -15,7 +15,7 @@ export function getOrders() {
  */
 export function getAllOrders() {
   return request({
-    url: '/api/v1/orders/all',
+    url: '/orders/all',
     method: 'get'
   })
 }
@@ -25,7 +25,7 @@ export function getAllOrders() {
  */
 export function approveOrder(id) {
   return request({
-    url: `/api/v1/orders/${id}/approve`,
+    url: `/orders/${id}/approve`,
     method: 'post'
   })
 }
