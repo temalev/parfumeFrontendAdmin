@@ -20,3 +20,35 @@ export function updatePriceCourse(data) {
     data
   })
 }
+
+/**
+ * Получить медиа
+ */
+export function getMedia() {
+  return request({
+    url: '/param/public_media',
+    method: 'get'
+  })
+}
+
+/**
+ * Получить медиа
+ */
+export function updateMedia(data) {
+  return request({
+    url: '/param/public_media',
+    method: 'patch',
+    data
+  })
+}
+
+/**
+ * Обновить бэкграунд
+ */
+export function editBackground(data) {
+  return request({
+    url: '/param/public_media',
+    method: 'patch',
+    data
+  })
+}

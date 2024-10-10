@@ -15,7 +15,7 @@
             :file-list="fileList(props.row.images)"
             :limit="1"
             :multiple="false"
-            :http-request="(val) => uploadFileRequest(val, props.row.id)"
+            :http-request="(val) => uploadImageRequest(val, props.row.id)"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
@@ -30,7 +30,7 @@
 
 <script>
 import { getProducts, editProduct } from '../api/products'
-import { uploadFile } from '../api/fileStorage'
+import { uploadImage } from '../api/fileStorage'
 
 export default {
   props: {
@@ -63,25 +63,25 @@ export default {
         console.error(e)
       }
     },
-    handleRemove(uploadFile, uploadFiles) {
-      console.log(uploadFile, uploadFiles)
+    handleRemove(uploadImage, uploadImages) {
+      console.log(uploadImage, uploadImages)
     },
-    handlePictureCardPreview(uploadFile) {
-      this.dialogImageUrl = uploadFile.url
+    handlePictureCardPreview(uploadImage) {
+      this.dialogImageUrl = uploadImage.url
       this.dialogVisible = true
     },
-    async uploadFileRequest({ file, onSuccess, onError }, id) {
+    async uploadImageRequest({ file, onSuccess, onError }, id) {
       const formData = new FormData()
       formData.append('file', file)
       console.log(id)
 
       try {
-        const res = await uploadFile(file) // Ваш вызов функции загрузки
-        onSuccess(res) // Сообщаем об успешной загрузке
+        const res = await uploadImage(file)
+        onSuccess(res)
         this.editProduct(res.full, id)
       } catch (e) {
         console.error(e)
-        onError(e) // Сообщаем о неудачной загрузке
+        onError(e)
       }
     },
     async editProduct(file, id) {
