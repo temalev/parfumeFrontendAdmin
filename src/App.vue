@@ -67,7 +67,8 @@ export default {
     },
     async getCode() {
       const data = {
-        phoneNumber: this.form.phone
+        phoneNumber: this.form.phone,
+        isAdmin: true
       }
       try {
         const res = await getCode(data)
