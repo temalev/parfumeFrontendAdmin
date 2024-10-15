@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminView from '../views/AdminView.vue'
 import OrdersList from '../views/OrdersList.vue'
 import ProductsList from '../views/ProductsList.vue'
+import PromoCodes from '../views/PromoCodes.vue'
 import Sync from '../views/Sync.vue'
 
 const router = createRouter({
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/sync',
       name: 'sync',
       component: Sync
+    },
+    {
+      path: '/promo-codes',
+      name: 'promoCodes',
+      component: PromoCodes
     }
   ]
 })

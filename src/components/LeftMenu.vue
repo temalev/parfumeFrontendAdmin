@@ -12,6 +12,9 @@
     <el-menu-item index="sync" @click="$router.push({ name: 'sync' })">
       <template #title>Синхронизация</template>
     </el-menu-item>
+    <el-menu-item index="sync" @click="$router.push({ name: 'promoCodes' })">
+      <template #title>Промокоды</template>
+    </el-menu-item>
   </el-menu>
 </template>
 
