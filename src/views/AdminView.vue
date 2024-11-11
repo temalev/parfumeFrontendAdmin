@@ -15,18 +15,34 @@
         +
 
         <template #file="{ file }">
-          <div v-loading="!media.stories?.find((el) => el.url === file.url)">
-            <video :key="file.url" :data="file.url" playsinline preload="metadata" loop muted>
-              <source :src="file.url" type="video/mp4" />
-            </video>
-            <span class="el-upload-list__item-actions">
-              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                <Icon icon="material-symbols-light:fullscreen" width="24" height="24" />
+          <div class="d-flex-column" v-loading="!media.stories?.find((el) => el.url === file.url)">
+            <div class="video">
+              <video :key="file.url" :data="file.url" playsinline preload="metadata" loop muted>
+                <source :src="file.url" type="video/mp4" />
+              </video>
+              <span class="el-upload-list__item-actions">
+                <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                  <Icon icon="material-symbols-light:fullscreen" width="24" height="24" />
+                </span>
+                <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                  <Icon icon="material-symbols-light:delete-outline" width="24" height="24" />
+                </span>
               </span>
-              <span class="el-upload-list__item-delete" @click="handleRemove(file)">
-                <Icon icon="material-symbols-light:delete-outline" width="24" height="24" />
-              </span>
-            </span>
+            </div>
+            <div class="preview">
+              <img v-if="file.preview" :src="file.preview" alt="" height="100" width="200" />
+              <el-upload
+                v-else
+                class="avatar-uploader"
+                action="#"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :http-request="(val) => uploadPreview(val, file.url)"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                +
+              </el-upload>
+            </div>
           </div>
         </template>
       </el-upload>
@@ -66,9 +82,10 @@ export default {
   data() {
     return {
       priceCourse: 0,
-      media: { storeis: null },
+      media: { stories: [] },
       dialogVisible: false,
-      dialogImageUrl: null
+      dialogImageUrl: null,
+      imageUrl: null
     }
   },
   mounted() {
@@ -110,25 +127,37 @@ export default {
     async uploadFile({ file, onSuccess, onError }) {
       const formData = new FormData()
       formData.append('file', file)
-
       try {
         const res = await uploadFile(formData)
         onSuccess(res)
-
         let data = this.media
-
         if (data?.stories?.length) {
           data.stories.push({ url: res.path })
         } else {
           data = { stories: [{ url: res.path }] }
         }
-
         this.updateMediaData(data)
       } catch (e) {
         console.error(e)
         onError(e)
       }
     },
+    async uploadPreview({ file, onSuccess, onError }, url) {
+      const story = this.media.stories.find((el) => el.url === url)
+
+      const formData = new FormData()
+      formData.append('file', file)
+      try {
+        const res = await uploadFile(formData)
+        onSuccess(res)
+        story.preview = res.path
+        this.updateMediaData(this.media)
+      } catch (e) {
+        console.error(e)
+        onError(e)
+      }
+    },
+
     async updateMediaData(data) {
       try {
         const res = await updateMedia({ data })
@@ -185,13 +214,21 @@ main {
   font-size: 18px;
 }
 
+.preview {
+  width: 100%;
+  height: 100%;
+}
+
 ::v-deep {
   .el-upload-list__item {
     width: 135px;
-    height: 240px;
+    height: 500px;
     video {
       height: 240px;
       border-radius: 8px;
+    }
+    .el-upload-list__item-actions {
+      height: 240px;
     }
   }
   .el-dialog {
@@ -200,6 +237,21 @@ main {
     video {
       height: 500px;
     }
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+    height: 225px;
+    width: 100%;
+  }
+
+  .avatar-uploader .el-upload:hover {
+    border-color: var(--el-color-primary);
   }
 }
 </style>
