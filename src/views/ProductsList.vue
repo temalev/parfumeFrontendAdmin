@@ -12,7 +12,7 @@
       <el-table-column prop="images" label="Фото">
         <template #default="props">
           <el-upload
-            :file-list="fileList(props.row.images)"
+            :file-list="fileList(props.row?.images)"
             :limit="1"
             :multiple="false"
             :http-request="(val) => uploadImageRequest(val, props.row.id)"
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     fileList(images) {
-      return images.map((el) => {
+      return images?.map((el) => {
         return {
           url: el
         }
