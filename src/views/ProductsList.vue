@@ -78,7 +78,8 @@ export default {
       try {
         const res = await uploadImage(file)
         onSuccess(res)
-        this.editProduct(res.full, id)
+
+        this.editProduct(res, id)
       } catch (e) {
         console.error(e)
         onError(e)
@@ -86,7 +87,8 @@ export default {
     },
     async editProduct(file, id) {
       const data = {
-        images: [file]
+        images: [file.full],
+        previewImage: file.small
       }
       try {
         const res = await editProduct(data, id)
