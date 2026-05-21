@@ -4,32 +4,38 @@
     <div class="body">
       <left-menu />
       <RouterView :orders="orders" />
-      <el-dialog v-model="dialogFormVisible" title="Вход" width="500">
-        <el-form v-if="step === 1" :model="form">
-          <el-form-item label="Номер телефона">
+      <el-dialog v-model="dialogFormVisible" title="Вход" width="500" :close-on-click-modal="false">
+        <el-form :model="form" @submit.prevent="logIn">
+          <el-form-item label="Email">
             <el-input
-              v-model="form.phone"
-              style="width: 240px"
-              placeholder="Введите номер телефона"
-              :formatter="formatPhone"
-              :parser="parsePhone"
+              v-model="form.email"
+              type="email"
+              autocomplete="email"
+              placeholder="Введите email"
             />
           </el-form-item>
-        </el-form>
-        <el-form v-if="step === 2" :model="form">
-          <el-form-item label="Код доступа">
-            <el-input v-model="form.code" style="width: 240px" placeholder="Введите код" />
+          <el-form-item label="Пароль">
+            <el-input
+              v-model="form.password"
+              type="password"
+              autocomplete="current-password"
+              show-password
+              placeholder="Введите пароль"
+              @keyup.enter="logIn"
+            />
           </el-form-item>
+          <div v-if="loginError" class="login-error">{{ loginError }}</div>
         </el-form>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="step === 2 ? (step = 1) : (dialogFormVisible = false)"
-              >Cancel</el-button
+            <el-button
+              type="primary"
+              :loading="loginLoading"
+              :disabled="!form.email || !form.password"
+              @click="logIn"
             >
-            <el-button v-if="step === 1" type="primary" @click="getCode(), (step = 2)">
-              Confirm
+              Войти
             </el-button>
-            <el-button v-else type="primary" @click="logIn()"> Confirm </el-button>
           </div>
         </template>
       </el-dialog>
@@ -38,19 +44,19 @@
 </template>
 <script>
 import LeftMenu from './components/LeftMenu.vue'
-import { getMe, logIn, getCode } from './api/login'
+import { getMe, logIn } from './api/login'
 
 export default {
   components: { LeftMenu },
   data() {
     return {
       dialogFormVisible: false,
+      loginLoading: false,
+      loginError: '',
       form: {
-        phone: '',
-        code: ''
+        email: '',
+        password: ''
       },
-      step: 1,
-      uuid: null,
       orders: []
     }
   },
@@ -60,74 +66,28 @@ export default {
   methods: {
     async getMe() {
       try {
-        const res = await getMe()
+        await getMe()
       } catch (e) {
         this.dialogFormVisible = true
       }
     },
-    async getCode() {
-      const data = {
-        phoneNumber: this.form.phone,
-        isAdmin: true
-      }
-      try {
-        const res = await getCode(data)
-        this.uuid = res.uuid
-      } catch (e) {
-        console.error(e)
-      }
-    },
     async logIn() {
-      const data = {
-        uuid: this.uuid,
-        code: this.form.code
-      }
+      if (!this.form.email || !this.form.password) return
+      this.loginError = ''
+      this.loginLoading = true
       try {
-        const res = await logIn(data)
+        await logIn({
+          email: this.form.email.trim().toLowerCase(),
+          password: this.form.password
+        })
         this.dialogFormVisible = false
+        this.form.password = ''
+        await this.getMe()
       } catch (e) {
-        console.error(e)
+        this.loginError = e?.message || 'Не удалось войти. Проверьте email и пароль.'
+      } finally {
+        this.loginLoading = false
       }
-    },
-    formatPhone(value) {
-      if (!value) return ''
-
-      // Удаляем все, кроме цифр
-      const cleanedValue = value.replace(/\D/g, '')
-
-      // Ограничим ввод до 11 цифр (7 для России + 10 цифр номера)
-      const match = cleanedValue.match(/^(\d{1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/)
-
-      if (!match) {
-        return cleanedValue
-      }
-
-      let formatted = '+7' // Формируем номер с +7 для России
-
-      // Если есть код города
-      if (match[2]) {
-        formatted += ` (${match[2]}`
-      }
-
-      // Если есть первая часть номера
-      if (match[3]) {
-        formatted += `) ${match[3]}`
-      }
-
-      // Если есть первая пара цифр
-      if (match[4]) {
-        formatted += `-${match[4]}`
-      }
-
-      // Если есть вторая пара цифр
-      if (match[5]) {
-        formatted += `-${match[5]}`
-      }
-
-      return formatted
-    },
-    parsePhone(value) {
-      return value.replace(/\D/g, '') // Удалить все нецифровые символы
     }
   }
 }
@@ -146,5 +106,10 @@ header {
   display: flex;
   width: 100%;
   height: 100%;
+}
+.login-error {
+  color: #f56c6c;
+  font-size: 13px;
+  margin-top: 4px;
 }
 </style>
