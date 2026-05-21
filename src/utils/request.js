@@ -1,5 +1,5 @@
 import axios from 'axios'
-import app from '@/main'
+import { ElMessage } from 'element-plus'
 
 // import { stringify } from 'query-string';
 
@@ -49,14 +49,9 @@ service.interceptors.response.use(
       window.location.href = `/login?redirect_url=${window.location.pathname}`
     }
     if (error.response?.status >= 400 && error.response?.status !== 401) {
-      app.config.globalProperties.$toast.add({
-        severity: ToastSeverity.ERROR,
-        summary: 'Ошибка',
-        detail: error.response.data || 'Внутренняя ошибка',
-        life: 3000
-      })
+      ElMessage.error(error.response.data?.message || error.response.data || 'Внутренняя ошибка')
     }
-    return Promise.reject(error.response.data)
+    return Promise.reject(error.response?.data || error)
   }
 )
 

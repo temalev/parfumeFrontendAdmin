@@ -22,22 +22,11 @@ export function logIn(data) {
 }
 
 /**
- * Вход
- */
-export function getCode(data) {
-  return request({
-    url: '/auth/code/call',
-    method: 'post',
-    data
-  })
-}
-
-/**
  * Выход
  */
 export function logout(data) {
   return request({
-    url: '/logout',
+    url: '/auth/logout',
     method: 'post',
     data
   })

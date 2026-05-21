@@ -1,7 +1,7 @@
 <template>
   <div class="products-view">
     <div class="products-view-header">
-      <h1>Товары</h1>
+      <h1>Товары все</h1>
     </div>
 
     <el-table :data="products" style="width: 100%">
@@ -11,15 +11,9 @@
       <el-table-column prop="price" label="Стоимость" />
       <el-table-column prop="images" label="Фото">
         <template #default="props">
-          <el-upload
-            :file-list="fileList(props.row?.images)"
-            :limit="1"
-            :multiple="false"
-            :http-request="(val) => uploadImageRequest(val, props.row.id)"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-          >
+          <el-upload :file-list="fileList(props.row?.images)" :limit="1" :multiple="false"
+            :http-request="(val) => uploadImageRequest(val, props.row.id)" list-type="picture-card"
+            :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
             +
           </el-upload>
         </template>
