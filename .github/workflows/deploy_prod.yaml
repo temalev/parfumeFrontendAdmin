@@ -20,12 +20,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/frontend_admin_prod
+            cd ~/admin_prod
             git pull
-            rm -rf dist
-            docker build . --output type=local,dest=./dist
-            rm -rf /var/www/admin_prod/*
-            cp -r ./dist/* /var/www/admin_prod
+            docker compose up --force-recreate -d --no-deps --build admin-frontend
 
       - name: Send success message
         if: ${{ success() }}
